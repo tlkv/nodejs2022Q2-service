@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { MemoryDb } from 'src/services/db.service';
+import { v4 } from 'uuid';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Injectable()
 export class ArtistsService {
+  private artists = MemoryDb.artists;
+
   create(createArtistDto: CreateArtistDto) {
-    return 'This action adds a new artist';
+    const newArtist = {
+      id: v4(),
+      name: createArtistDto.name,
+      grammy: createArtistDto.grammy,
+    };
+    this.artists.push(newArtist);
+    return newArtist;
   }
 
   findAll() {
-    return `This action returns all artists`;
+    return this.artists;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} artist`;
+  findOne(id: string) {
+    const currArtist = this.artists.find((i) => i.id === id);
+    if (!currArtist) {
+      throw new NotFoundException('Artist not found');
+    }
+    return currArtist;
   }
 
-  update(id: number, updateArtistDto: UpdateArtistDto) {
+  update(id: string, updateArtistDto: UpdateArtistDto) {
     return `This action updates a #${id} artist`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} artist`;
   }
 }

@@ -7,7 +7,6 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -23,11 +22,10 @@ export class UsersController {
 
   @Get()
   getAll() {
-    return this.usersService.getAll(); // exclude password
+    return this.usersService.getAll();
   }
 
   @Get(':id')
-  // @HttpCode(204)
   getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.getById(id);
   }
