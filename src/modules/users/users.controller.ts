@@ -1,9 +1,13 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
+  HttpStatus,
+  NotFoundException,
   Param,
   ParseUUIDPipe,
   Post,
@@ -23,17 +27,19 @@ export class UsersController {
   }
 
   @Get(':id')
+  // @HttpCode(204)
   getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.getById(id);
   }
 
   @Post()
-  @HttpCode(201)
+  @HttpCode(HttpStatus.CREATED)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.remove(id);
   }
@@ -43,6 +49,16 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {
+    if (!updateUserDto.newPassword || !updateUserDto.oldPassword) {
+      throw new BadRequestException();
+    }
+    if (updateUserDto.oldPassword === updateUserDto.newPassword) {
+      throw new ForbiddenException('Password matches the old one');
+    } else if (
+      this.usersService.getPass(id).password !== updateUserDto.oldPassword
+    ) {
+      throw new ForbiddenException('Old password do not match');
+    }
     return this.usersService.update(updateUserDto, id);
   }
 }

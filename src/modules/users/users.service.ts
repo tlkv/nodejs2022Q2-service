@@ -9,7 +9,10 @@ export class UsersService {
   private users = MemoryDb.users;
 
   getAll() {
-    return this.users; // exclude password
+    return this.users.map((i) => {
+      delete i.password;
+      return i;
+    });
   }
 
   getById(id: string) {
@@ -17,12 +20,18 @@ export class UsersService {
     if (!currUser) {
       throw new NotFoundException('User not found');
     }
+    const res = { ...currUser, id };
+    delete res.password;
+    return res;
+  }
+
+  getPass(id: string) {
+    const currUser = this.users.find((i) => i.id === id);
+    if (!currUser) {
+      throw new NotFoundException('User not found');
+    }
     return {
-      id: currUser.id,
-      login: currUser.login,
-      createdAt: currUser.createdAt,
-      updatedAt: currUser.updatedAt,
-      version: currUser.version,
+      password: currUser.password,
     };
   }
 
@@ -52,5 +61,17 @@ export class UsersService {
     if (!currUser) {
       throw new NotFoundException('User not found');
     }
+    const elemIndex = this.users.findIndex((i) => i.id === id);
+
+    this.users[elemIndex] = {
+      ...this.users[elemIndex],
+      version: this.users[elemIndex].version + 1,
+      password: updateUserDto.newPassword,
+      updatedAt: Date.now(),
+    };
+
+    const res = { ...this.users[elemIndex] };
+    delete res.password;
+    return res;
   }
 }
