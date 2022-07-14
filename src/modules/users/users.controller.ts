@@ -3,7 +3,9 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -21,22 +23,26 @@ export class UsersController {
   }
 
   @Get(':id')
-  getOne(@Param('id') id: string) {
+  getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
     return this.usersService.getById(id);
   }
 
   @Post()
+  @HttpCode(201)
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return 'remove ' + id;
+  remove(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.usersService.remove(id);
   }
 
   @Put(':id')
-  update(@Body() updateUserDto: UpdateUserDto, @Param('id') id: string) {
-    return `${id} Title: `;
+  update(
+    @Body() updateUserDto: UpdateUserDto,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
+  ) {
+    return this.usersService.update(updateUserDto, id);
   }
 }
