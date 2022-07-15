@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -47,9 +46,6 @@ export class UsersController {
     @Body() updateUserDto: UpdateUserDto,
     @Param('id', new ParseUUIDPipe({ version: '4' })) id: string,
   ) {
-    if (!updateUserDto.newPassword || !updateUserDto.oldPassword) {
-      throw new BadRequestException();
-    }
     if (updateUserDto.oldPassword === updateUserDto.newPassword) {
       throw new ForbiddenException('Password matches the old one');
     } else if (

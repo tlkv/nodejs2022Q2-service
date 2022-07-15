@@ -23,18 +23,32 @@ export class ArtistsService {
   }
 
   findOne(id: string) {
+    const currArtist = this.checkArtist(id);
+    return currArtist;
+  }
+
+  update(id: string, updateArtistDto: UpdateArtistDto) {
+    const currArtist = this.checkArtist(id);
+    const elemIndex = this.artists.findIndex((i) => i.id === id);
+
+    this.artists[elemIndex] = {
+      ...this.artists[elemIndex],
+      ...updateArtistDto,
+    };
+
+    return this.artists[elemIndex];
+  }
+
+  remove(id: string) {
+    const currArtist = this.checkArtist(id);
+    this.artists = this.artists.filter((i) => i.id !== id);
+  }
+
+  checkArtist(id: string) {
     const currArtist = this.artists.find((i) => i.id === id);
     if (!currArtist) {
       throw new NotFoundException('Artist not found');
     }
     return currArtist;
-  }
-
-  update(id: string, updateArtistDto: UpdateArtistDto) {
-    return `This action updates a #${id} artist`;
-  }
-
-  remove(id: string) {
-    return `This action removes a #${id} artist`;
   }
 }

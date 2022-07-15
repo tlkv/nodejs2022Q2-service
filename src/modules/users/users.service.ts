@@ -16,23 +16,10 @@ export class UsersService {
   }
 
   getById(id: string) {
-    const currUser = this.users.find((i) => i.id === id);
-    if (!currUser) {
-      throw new NotFoundException('User not found');
-    }
+    const currUser = this.checkUser(id);
     const res = { ...currUser, id };
     delete res.password;
     return res;
-  }
-
-  getPass(id: string) {
-    const currUser = this.users.find((i) => i.id === id);
-    if (!currUser) {
-      throw new NotFoundException('User not found');
-    }
-    return {
-      password: currUser.password,
-    };
   }
 
   create(userDto: CreateUserDto) {
@@ -49,18 +36,12 @@ export class UsersService {
   }
 
   remove(id: string) {
-    const currUser = this.users.find((i) => i.id === id);
-    if (!currUser) {
-      throw new NotFoundException('User not found');
-    }
+    const currUser = this.checkUser(id);
     this.users = this.users.filter((i) => i.id !== id);
   }
 
   update(updateUserDto: UpdateUserDto, id: string) {
-    const currUser = this.users.find((i) => i.id === id);
-    if (!currUser) {
-      throw new NotFoundException('User not found');
-    }
+    const currUser = this.checkUser(id);
     const elemIndex = this.users.findIndex((i) => i.id === id);
 
     this.users[elemIndex] = {
@@ -73,5 +54,20 @@ export class UsersService {
     const res = { ...this.users[elemIndex] };
     delete res.password;
     return res;
+  }
+
+  getPass(id: string) {
+    const currUser = this.checkUser(id);
+    return {
+      password: currUser.password,
+    };
+  }
+
+  checkUser(id: string) {
+    const currUser = this.users.find((i) => i.id === id);
+    if (!currUser) {
+      throw new NotFoundException('User not found');
+    }
+    return currUser;
   }
 }
