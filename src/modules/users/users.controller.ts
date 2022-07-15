@@ -26,7 +26,7 @@ export class UsersController {
 
   @Get(':id')
   getOne(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.usersService.getById(id);
+    return this.usersService.getById(id, false);
   }
 
   @Post()

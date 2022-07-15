@@ -13,6 +13,7 @@ async function bootstrap() {
   const document = parse(API);
   SwaggerModule.setup('doc', app, document);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  //
   await app.listen(4000);
 }
 bootstrap();

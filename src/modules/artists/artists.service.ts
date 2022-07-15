@@ -23,12 +23,16 @@ export class ArtistsService {
   }
 
   findOne(id: string) {
-    const currArtist = this.checkArtist(id);
+    const currArtist = this.artists.find((i) => i.id === id);
+    if (!currArtist) {
+      throw new NotFoundException('Artist not found');
+    }
     return currArtist;
   }
 
   update(id: string, updateArtistDto: UpdateArtistDto) {
-    const currArtist = this.checkArtist(id);
+    const currArtist = this.findOne(id);
+    if (!currArtist) return;
     const elemIndex = this.artists.findIndex((i) => i.id === id);
 
     this.artists[elemIndex] = {
@@ -40,15 +44,8 @@ export class ArtistsService {
   }
 
   remove(id: string) {
-    const currArtist = this.checkArtist(id);
+    const currArtist = this.findOne(id);
+    if (!currArtist) return;
     this.artists = this.artists.filter((i) => i.id !== id);
-  }
-
-  checkArtist(id: string) {
-    const currArtist = this.artists.find((i) => i.id === id);
-    if (!currArtist) {
-      throw new NotFoundException('Artist not found');
-    }
-    return currArtist;
   }
 }

@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { MemoryDb } from 'src/services/db.service';
+import { v4 } from 'uuid';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumsService {
+  private albums = MemoryDb.albums;
+
   create(createAlbumDto: CreateAlbumDto) {
-    return 'This action adds a new album';
+    const newAlbum = {
+      id: v4(),
+      name: createAlbumDto.name,
+      year: createAlbumDto.year,
+      artistId: createAlbumDto.artistId,
+    };
+    this.albums.push(newAlbum);
+    return newAlbum;
   }
 
   findAll() {
-    return `This action returns all albums`;
+    return this.albums;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} album`;
+  findOne(id: string) {
+    const currAlbum = this.albums.find((i) => i.id === id);
+    if (!currAlbum) {
+      throw new NotFoundException('Album not found');
+    }
+    return currAlbum;
   }
 
-  update(id: number, updateAlbumDto: UpdateAlbumDto) {
-    return `This action updates a #${id} album`;
+  update(id: string, updateAlbumDto: UpdateAlbumDto) {
+    const currAlbum = this.findOne(id);
+    if (!currAlbum) return;
+    const elemIndex = this.albums.findIndex((i) => i.id === id);
+
+    this.albums[elemIndex] = {
+      ...this.albums[elemIndex],
+      ...updateAlbumDto,
+    };
+
+    return this.albums[elemIndex];
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} album`;
+  remove(id: string) {
+    const currAlbum = this.findOne(id);
+    if (!currAlbum) return;
+    this.albums = this.albums.filter((i) => i.id !== id);
   }
 }

@@ -15,10 +15,15 @@ export class UsersService {
     });
   }
 
-  getById(id: string) {
-    const currUser = this.checkUser(id);
+  getById(id: string, withPassword: boolean) {
+    const currUser = this.users.find((i) => i.id === id);
+    if (!currUser) {
+      throw new NotFoundException('User not found');
+    }
     const res = { ...currUser, id };
-    delete res.password;
+    if (!withPassword) {
+      delete res.password;
+    }
     return res;
   }
 
@@ -36,12 +41,14 @@ export class UsersService {
   }
 
   remove(id: string) {
-    const currUser = this.checkUser(id);
+    const currUser = this.getById(id, false);
+    if (!currUser) return;
     this.users = this.users.filter((i) => i.id !== id);
   }
 
   update(updateUserDto: UpdateUserDto, id: string) {
-    const currUser = this.checkUser(id);
+    const currUser = this.getById(id, true);
+    if (!currUser) return;
     const elemIndex = this.users.findIndex((i) => i.id === id);
 
     this.users[elemIndex] = {
@@ -57,17 +64,9 @@ export class UsersService {
   }
 
   getPass(id: string) {
-    const currUser = this.checkUser(id);
+    const currUser = this.getById(id, true);
     return {
       password: currUser.password,
     };
-  }
-
-  checkUser(id: string) {
-    const currUser = this.users.find((i) => i.id === id);
-    if (!currUser) {
-      throw new NotFoundException('User not found');
-    }
-    return currUser;
   }
 }
