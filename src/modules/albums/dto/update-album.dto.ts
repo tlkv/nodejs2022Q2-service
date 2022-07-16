@@ -1,11 +1,14 @@
 import { PartialType } from '@nestjs/swagger';
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class UpdateAlbumDto {
   @IsString()
   name: string;
+
   @IsInt()
   year: number;
-  @IsString()
+
+  @IsUUID(4)
+  @IsOptional()
   artistId: string | null;
 }

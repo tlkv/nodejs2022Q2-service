@@ -1,13 +1,17 @@
-import { IsInt, IsString } from 'class-validator';
+import { IsInt, IsString, IsUUID } from 'class-validator';
 
 export class Track {
   id: string;
+
   @IsString()
   name: string;
-  @IsString()
+
+  @IsUUID(4)
   artistId: string | null;
-  @IsString()
+
+  @IsUUID(4)
   albumId: string | null;
+
   @IsInt()
   duration: number;
 }

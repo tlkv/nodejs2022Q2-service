@@ -7,6 +7,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 @Injectable()
 export class ArtistsService {
   private artists = MemoryDb.artists;
+  private tracks = MemoryDb.tracks;
 
   create(createArtistDto: CreateArtistDto) {
     const newArtist = {
@@ -47,5 +48,11 @@ export class ArtistsService {
     const currArtist = this.findOne(id);
     if (!currArtist) return;
     this.artists = this.artists.filter((i) => i.id !== id);
+    this.tracks.forEach((i) => {
+      if (i.artistId === id) {
+        i.albumId = null;
+        i.artistId = null;
+      }
+    });
   }
 }

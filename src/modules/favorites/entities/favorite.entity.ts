@@ -5,9 +5,11 @@ export class Favorite {
   @IsArray()
   @Type(() => String)
   artists: string[];
+
   @IsArray()
   @Type(() => String)
   albums: string[];
+
   @IsArray()
   @Type(() => String)
   tracks: string[];

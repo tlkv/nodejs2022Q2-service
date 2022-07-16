@@ -1,9 +1,10 @@
-import { PartialType } from '@nestjs/swagger';
-import { IsBoolean, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 export class UpdateArtistDto {
   @IsString()
+  @IsOptional()
   name: string;
 
   @IsBoolean()
+  @IsOptional()
   grammy: boolean;
 }

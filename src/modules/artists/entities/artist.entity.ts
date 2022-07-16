@@ -4,6 +4,7 @@ export class Artist {
   id: string;
   @IsString()
   name: string;
+
   @IsBoolean()
   grammy: boolean;
 }

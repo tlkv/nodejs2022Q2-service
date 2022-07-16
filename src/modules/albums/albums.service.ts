@@ -7,6 +7,7 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 @Injectable()
 export class AlbumsService {
   private albums = MemoryDb.albums;
+  private tracks = MemoryDb.tracks;
 
   create(createAlbumDto: CreateAlbumDto) {
     const newAlbum = {
@@ -48,5 +49,10 @@ export class AlbumsService {
     const currAlbum = this.findOne(id);
     if (!currAlbum) return;
     this.albums = this.albums.filter((i) => i.id !== id);
+    this.tracks.forEach((i) => {
+      if (i.albumId === id) {
+        i.albumId = null;
+      }
+    });
   }
 }
