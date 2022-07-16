@@ -1,5 +1,4 @@
 import { IsArray } from 'class-validator';
-import { Type } from 'class-transformer';
 import { Track } from 'src/modules/tracks/entities/track.entity';
 import { Album } from 'src/modules/albums/entities/album.entity';
 import { Artist } from 'src/modules/artists/entities/artist.entity';

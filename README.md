@@ -8,7 +8,11 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/tlkv/nodejs2022Q2-service.git
+cd nodejs2022Q2-service
+git checkout rest-service
+npm i
+npm run start
 ```
 
 ## Installing NPM modules

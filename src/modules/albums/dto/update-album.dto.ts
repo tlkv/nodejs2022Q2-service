@@ -1,4 +1,3 @@
-import { PartialType } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class UpdateAlbumDto {
