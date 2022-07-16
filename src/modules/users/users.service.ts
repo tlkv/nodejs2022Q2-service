@@ -6,17 +6,15 @@ import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
-  private users = MemoryDb.users;
-
   getAll() {
-    return this.users.map((i) => {
+    return MemoryDb.users.map((i) => {
       delete i.password;
       return i;
     });
   }
 
   getById(id: string, withPassword: boolean) {
-    const currUser = this.users.find((i) => i.id === id);
+    const currUser = MemoryDb.users.find((i) => i.id === id);
     if (!currUser) {
       throw new NotFoundException('User not found');
     }
@@ -36,29 +34,29 @@ export class UsersService {
       updatedAt: Date.now(),
     };
 
-    this.users.push({ ...newUser, password: userDto.password });
+    MemoryDb.users.push({ ...newUser, password: userDto.password });
     return newUser;
   }
 
   remove(id: string) {
     const currUser = this.getById(id, false);
     if (!currUser) return;
-    this.users = this.users.filter((i) => i.id !== id);
+    MemoryDb.users = MemoryDb.users.filter((i) => i.id !== id);
   }
 
   update(updateUserDto: UpdateUserDto, id: string) {
     const currUser = this.getById(id, true);
     if (!currUser) return;
-    const elemIndex = this.users.findIndex((i) => i.id === id);
+    const elemIndex = MemoryDb.users.findIndex((i) => i.id === id);
 
-    this.users[elemIndex] = {
-      ...this.users[elemIndex],
-      version: this.users[elemIndex].version + 1,
+    MemoryDb.users[elemIndex] = {
+      ...MemoryDb.users[elemIndex],
+      version: MemoryDb.users[elemIndex].version + 1,
       password: updateUserDto.newPassword,
       updatedAt: Date.now(),
     };
 
-    const res = { ...this.users[elemIndex] };
+    const res = { ...MemoryDb.users[elemIndex] };
     delete res.password;
     return res;
   }

@@ -6,9 +6,6 @@ import { UpdateAlbumDto } from './dto/update-album.dto';
 
 @Injectable()
 export class AlbumsService {
-  private albums = MemoryDb.albums;
-  private tracks = MemoryDb.tracks;
-
   create(createAlbumDto: CreateAlbumDto) {
     const newAlbum = {
       id: v4(),
@@ -16,16 +13,16 @@ export class AlbumsService {
       year: createAlbumDto.year,
       artistId: createAlbumDto.artistId,
     };
-    this.albums.push(newAlbum);
+    MemoryDb.albums.push(newAlbum);
     return newAlbum;
   }
 
   findAll() {
-    return this.albums;
+    return MemoryDb.albums;
   }
 
   findOne(id: string) {
-    const currAlbum = this.albums.find((i) => i.id === id);
+    const currAlbum = MemoryDb.albums.find((i) => i.id === id);
     if (!currAlbum) {
       throw new NotFoundException('Album not found');
     }
@@ -35,21 +32,26 @@ export class AlbumsService {
   update(id: string, updateAlbumDto: UpdateAlbumDto) {
     const currAlbum = this.findOne(id);
     if (!currAlbum) return;
-    const elemIndex = this.albums.findIndex((i) => i.id === id);
+    const elemIndex = MemoryDb.albums.findIndex((i) => i.id === id);
 
-    this.albums[elemIndex] = {
-      ...this.albums[elemIndex],
+    MemoryDb.albums[elemIndex] = {
+      ...MemoryDb.albums[elemIndex],
       ...updateAlbumDto,
     };
 
-    return this.albums[elemIndex];
+    return MemoryDb.albums[elemIndex];
   }
 
   remove(id: string) {
     const currAlbum = this.findOne(id);
     if (!currAlbum) return;
-    this.albums = this.albums.filter((i) => i.id !== id);
-    this.tracks.forEach((i) => {
+    MemoryDb.albums = MemoryDb.albums.filter((i) => i.id !== id);
+    MemoryDb.tracks.forEach((i) => {
+      if (i.albumId === id) {
+        i.albumId = null;
+      }
+    });
+    MemoryDb.favorites.tracks.forEach((i) => {
       if (i.albumId === id) {
         i.albumId = null;
       }

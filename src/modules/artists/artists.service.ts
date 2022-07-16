@@ -6,25 +6,22 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 
 @Injectable()
 export class ArtistsService {
-  private artists = MemoryDb.artists;
-  private tracks = MemoryDb.tracks;
-
   create(createArtistDto: CreateArtistDto) {
     const newArtist = {
       id: v4(),
       name: createArtistDto.name,
       grammy: createArtistDto.grammy,
     };
-    this.artists.push(newArtist);
+    MemoryDb.artists.push(newArtist);
     return newArtist;
   }
 
   findAll() {
-    return this.artists;
+    return MemoryDb.artists;
   }
 
   findOne(id: string) {
-    const currArtist = this.artists.find((i) => i.id === id);
+    const currArtist = MemoryDb.artists.find((i) => i.id === id);
     if (!currArtist) {
       throw new NotFoundException('Artist not found');
     }
@@ -34,23 +31,41 @@ export class ArtistsService {
   update(id: string, updateArtistDto: UpdateArtistDto) {
     const currArtist = this.findOne(id);
     if (!currArtist) return;
-    const elemIndex = this.artists.findIndex((i) => i.id === id);
+    const elemIndex = MemoryDb.artists.findIndex((i) => i.id === id);
 
-    this.artists[elemIndex] = {
-      ...this.artists[elemIndex],
+    MemoryDb.artists[elemIndex] = {
+      ...MemoryDb.artists[elemIndex],
       ...updateArtistDto,
     };
 
-    return this.artists[elemIndex];
+    return MemoryDb.artists[elemIndex];
   }
 
   remove(id: string) {
     const currArtist = this.findOne(id);
     if (!currArtist) return;
-    this.artists = this.artists.filter((i) => i.id !== id);
-    this.tracks.forEach((i) => {
+    MemoryDb.artists = MemoryDb.artists.filter((i) => i.id !== id);
+    MemoryDb.tracks.forEach((i) => {
       if (i.artistId === id) {
-        i.albumId = null;
+        // i.albumId = null;
+        i.artistId = null;
+      }
+    });
+    MemoryDb.favorites.tracks.forEach((i) => {
+      if (i.artistId === id) {
+        // i.albumId = null;
+        i.artistId = null;
+      }
+    });
+    MemoryDb.albums.forEach((i) => {
+      if (i.artistId === id) {
+        // i.albumId = null;
+        i.artistId = null;
+      }
+    });
+    MemoryDb.favorites.albums.forEach((i) => {
+      if (i.artistId === id) {
+        // i.albumId = null;
         i.artistId = null;
       }
     });
