@@ -21,7 +21,6 @@ export class FavoritesService {
   }
 
   removeTrack(id: string) {
-    console.log('removeTrack');
     const currTrack = MemoryDb.favorites.tracks.find((i) => i.id === id);
     if (!currTrack) {
       throw new NotFoundException();
@@ -39,7 +38,6 @@ export class FavoritesService {
   }
 
   removeArtist(id: string) {
-    console.log('removeArtist');
     const currArtist = MemoryDb.favorites.artists.find((i) => i.id === id);
     if (!currArtist) {
       throw new NotFoundException();

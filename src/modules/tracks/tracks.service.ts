@@ -34,8 +34,6 @@ export class TracksService {
     const currTrack = this.findOne(id);
     if (!currTrack) return;
     const elemIndex = MemoryDb.tracks.findIndex((i) => i.id === id);
-    console.log(elemIndex);
-
     MemoryDb.tracks[elemIndex] = {
       ...MemoryDb.tracks[elemIndex],
       ...updateTrackDto,
