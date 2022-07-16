@@ -12,8 +12,7 @@ async function bootstrap() {
   const API = await readFile(join(rootDirname, 'doc', 'api.yaml'), 'utf-8');
   const document = parse(API);
   SwaggerModule.setup('doc', app, document);
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
-  //
+  app.useGlobalPipes(new ValidationPipe());
   await app.listen(4000);
 }
 bootstrap();

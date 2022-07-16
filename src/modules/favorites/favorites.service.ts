@@ -7,11 +7,6 @@ import { MemoryDb } from 'src/services/db.service';
 
 @Injectable()
 export class FavoritesService {
-  /* private favorites = MemoryDb.favorites;
-  private tracks = MemoryDb.tracks;
-  private artists = MemoryDb.artists;
-  private albums = MemoryDb.albums; */
-
   findAll() {
     return MemoryDb.favorites;
   }
@@ -20,33 +15,34 @@ export class FavoritesService {
     const currTrack = MemoryDb.tracks.find((i) => i.id === id);
     const currTrackFavs = MemoryDb.favorites.tracks.find((i) => i.id === id);
     if (!currTrack || currTrackFavs) {
-      throw new UnprocessableEntityException(); //422
+      throw new UnprocessableEntityException();
     }
     MemoryDb.favorites.tracks.push(currTrack);
   }
 
   removeTrack(id: string) {
+    console.log('removeTrack');
     const currTrack = MemoryDb.favorites.tracks.find((i) => i.id === id);
     if (!currTrack) {
-      throw new NotFoundException(); //404
+      throw new NotFoundException();
     }
-    MemoryDb.favorites.tracks = MemoryDb.favorites.tracks.filter(
-      (i) => i.id !== id,
-    );
+    const upd = MemoryDb.favorites.tracks.filter((i) => i.id !== id);
+    MemoryDb.favorites.tracks = upd;
   }
 
   createArtist(id: string) {
     const currArtist = MemoryDb.artists.find((i) => i.id === id);
     if (!currArtist) {
-      throw new UnprocessableEntityException(); //422
+      throw new UnprocessableEntityException();
     }
     MemoryDb.favorites.artists.push(currArtist);
   }
 
   removeArtist(id: string) {
+    console.log('removeArtist');
     const currArtist = MemoryDb.favorites.artists.find((i) => i.id === id);
     if (!currArtist) {
-      throw new NotFoundException(); //404
+      throw new NotFoundException();
     }
     MemoryDb.favorites.artists = MemoryDb.favorites.artists.filter(
       (i) => i.id !== id,
@@ -56,20 +52,20 @@ export class FavoritesService {
   createAlbum(id: string) {
     const currAlbum = MemoryDb.albums.find((i) => i.id === id);
     if (!currAlbum) {
-      throw new UnprocessableEntityException(); //422
+      throw new UnprocessableEntityException();
     }
     MemoryDb.favorites.albums.push(currAlbum);
-    // return `createAlbum`;
   }
 
   removeAlbum(id: string) {
     const currAlbum = MemoryDb.favorites.albums.find((i) => i.id === id);
     if (!currAlbum) {
-      throw new NotFoundException(); //404
+      throw new NotFoundException();
     }
+    console.log('removeAlbum', MemoryDb.favorites.albums);
     MemoryDb.favorites.albums = MemoryDb.favorites.albums.filter(
       (i) => i.id !== id,
     );
-    // return `removeAlbum`; //404
+    console.log('removeAlbum', MemoryDb.favorites.albums);
   }
 }
