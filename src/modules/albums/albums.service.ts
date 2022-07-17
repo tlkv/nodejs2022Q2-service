@@ -46,6 +46,9 @@ export class AlbumsService {
     const currAlbum = this.findOne(id);
     if (!currAlbum) return;
     MemoryDb.albums = MemoryDb.albums.filter((i) => i.id !== id);
+    MemoryDb.favorites.albums = MemoryDb.favorites.albums.filter(
+      (i) => i.id !== id,
+    );
     MemoryDb.tracks.forEach((i) => {
       if (i.albumId === id) {
         i.albumId = null;

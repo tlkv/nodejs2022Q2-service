@@ -45,6 +45,9 @@ export class ArtistsService {
     const currArtist = this.findOne(id);
     if (!currArtist) return;
     MemoryDb.artists = MemoryDb.artists.filter((i) => i.id !== id);
+    MemoryDb.favorites.artists = MemoryDb.favorites.artists.filter(
+      (i) => i.id !== id,
+    );
     MemoryDb.tracks.forEach((i) => {
       if (i.artistId === id) {
         i.artistId = null;

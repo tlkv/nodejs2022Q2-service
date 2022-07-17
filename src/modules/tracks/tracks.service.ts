@@ -38,7 +38,6 @@ export class TracksService {
       ...MemoryDb.tracks[elemIndex],
       ...updateTrackDto,
     };
-
     return MemoryDb.tracks[elemIndex];
   }
 
@@ -46,5 +45,8 @@ export class TracksService {
     const currTrack = this.findOne(id);
     if (!currTrack) return;
     MemoryDb.tracks = MemoryDb.tracks.filter((i) => i.id !== id);
+    MemoryDb.favorites.tracks = MemoryDb.favorites.tracks.filter(
+      (i) => i.id !== id,
+    );
   }
 }

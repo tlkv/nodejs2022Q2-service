@@ -60,10 +60,8 @@ export class FavoritesService {
     if (!currAlbum) {
       throw new NotFoundException();
     }
-    console.log('removeAlbum', MemoryDb.favorites.albums);
     MemoryDb.favorites.albums = MemoryDb.favorites.albums.filter(
       (i) => i.id !== id,
     );
-    console.log('removeAlbum', MemoryDb.favorites.albums);
   }
 }
