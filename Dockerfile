@@ -1,15 +1,17 @@
 FROM node:16-alpine3.14
 
-WORKDIR /app
+RUN mkdir -p /usr/app
 
-COPY package.json /app
+WORKDIR /usr/app
+
+COPY package.json /usr/app
 
 RUN npm install
 
 COPY . .
 
-ENV PORT 4200
+RUN npm install
 
-EXPOSE $PORT
+EXPOSE ${PORT}
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "start:dev"]
